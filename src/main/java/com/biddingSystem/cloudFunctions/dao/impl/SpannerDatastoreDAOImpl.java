@@ -118,8 +118,14 @@ public class SpannerDatastoreDAOImpl implements SpannerDatastoreDAO {
                 data[0] = resultSet.getString("AUCTION_ID");
                 data[1] = resultSet.getString("CATEGORY");
                 data[2] = String.valueOf(resultSet.getDouble("BASE_PRICE"));
-                data[3] = String.valueOf(resultSet.getDouble("MAX_BID_PRICE"));
-                data[4] = resultSet.getString("C_USER_ID");
+                Value maxBidPriceValue = resultSet.getValue("MAX_BID_PRICE");
+                if (!maxBidPriceValue.isNull()) {
+                    data[3] = String.valueOf(maxBidPriceValue.getFloat64());
+                }
+                Value userIdValue = resultSet.getValue("C_USER_ID");
+                if (!userIdValue.isNull()) {
+                    data[4] = userIdValue.getString();
+                }
                 data[5] = resultSet.getTimestamp("AUCTION_CREATION_TIME").toString();
                 data[6] = resultSet.getTimestamp("AUCTION_EXPIRY_TIME").toString();
                 writer.writeNext(data);
